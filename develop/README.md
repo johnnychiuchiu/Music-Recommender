@@ -3,6 +3,11 @@ music recommender
 
 The goal of the project is to help people discover the music they may enjoy by providing them a list of recommended songs according to their favorite musicians and songs.
 
+Documentation
+------------
+* `latentFactorModel.ipynb`: Jupyter Notebook that contains a walkthrough of the overall process. [[jupyter notebook](https://github.com/johnnychiuchiu/Music-Recommender/blob/sprint_1/develop/notebooks/latentFactorModel.ipynb)]
+
+
 Project Organization
 ------------
 
@@ -52,5 +57,7 @@ Project Organization
 
 
 --------
+
+
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
