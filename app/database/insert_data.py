@@ -1,17 +1,8 @@
 import pandas as pd
-import sqlite3
+import os
+from schema import Song
+from db_conn import dbConn
 
-def dbConn():
-    """
-    conn to sqlite database
-
-    Returns
-    -------
-    sqlite database connection object
-    """
-    song_db = '../../data/song.sqlite'
-    conn = sqlite3.connect(song_db)
-    return conn
 
 class ReadData():
     def __init__(self):
@@ -21,13 +12,12 @@ class ReadData():
         """
         read song data from the url provided by Turi. If the data has already exist, then read data from pickle file.
 
-
         Returns
         -------
         a song dataframe
         """
-        if 'song.pkl' in os.listdir('../../data'):
-            song_df = pd.read_pickle('../../data/song.pkl')
+        if 'song.pkl' in os.listdir('../../develop/data'):
+            song_df = pd.read_pickle('../../develop/data/song.pkl')
         else:
             # Read userid-songid-listen_count triplets
             # This step might take time to download data from external sources
@@ -84,15 +74,17 @@ if __name__=='__main__':
     song_df = ReadData().readSongData()
 
     # connect to sqlite database
-    conn = dbConn()
+    conn = dbConn('../../develop/data/song.sqlite')
 
     # insert the dataframe into the database
-    song_df.to_sql(name='Song', con=conn, if_exists='replace', index=False)
+    song_df.to_sql(name='Song', con=conn, if_exists='replace', index=True)
 
     print("Song Data Inserted")
 
+    # Song.query.first()
+
 
 # pd.read_sql_query("select * from " + name + ';', conn)
-# pd.read_sql_query("select * from Song limit 5;', conn)
+# pd.read_sql_query("select * from Song limit 5;", conn)
 
 

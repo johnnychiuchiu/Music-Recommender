@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 # Set db path
-db_path = '../../data/song.sqlite'
+db_path = '../../develop/data/song.sqlite'
 
 # initialized flask app
 app = Flask(__name__)
@@ -14,13 +14,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 # Initialize the database
 db = SQLAlchemy(app)
 
+
 class Song(db.Model):
     """
     create a table name Song with the follow schema
     """
     __tablename__ = 'Song'
 
-    id = db.Column(db.Integer, primary_key=True)
+    index = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.String(80), nullable=False)
     song_id = db.Column(db.String(80), nullable=False)
     listen_count = db.Column(db.Integer)
