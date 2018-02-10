@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="static/basic.css" rel="stylesheet">
+</head>
+
+<body>
+    <h3>
+         <a>Song List</a>
+    </h3>
+
+    <hr/>
+    <table>
+         <thead>
+            <tr>
+               <th>user_id</th>
+               <th>song_id</th>
+               <th>listen_count</th>
+               <th>title</th>
+               <th>release</th>
+               <th>artist_name</th>
+               <th>year</th>
+               <th>song</th>
+            </tr>
+         </thead>
+
+         <tbody>
+            {% for song in songs %}
+               <tr>
+                  <td>{{ song[0] }}</td>
+                  <td>{{ song[1] }}</td>
+                  <td>{{ song[2] }}</td>
+                  <td>{{ song[3] }}</td>
+                  <td>{{ song[4] }}</td>
+                  <td>{{ song[5] }}</td>
+                  <td>{{ song[6] }}</td>
+                  <td>{{ song[7] }}</td>
+               </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+
+</body>
+</html>
