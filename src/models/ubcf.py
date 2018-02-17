@@ -11,14 +11,12 @@ class collaborativeFiltering():
     def __init__(self):
         pass
 
-
-
     def readSongData(self, top):
         """
         Read song data from database
         """
 
-        path = os.getcwd() + '/../../data/song.sqlite'
+        path = os.getcwd() + '/data/song.sqlite'
         print(path)
         conn = sqlite3.connect(path)
         song_df = pd.read_sql_query("SELECT * FROM Song;", conn)
@@ -114,7 +112,7 @@ class collaborativeFiltering():
                                   on='song_id', how='left')
         return (user_recommend)
 
-    def createNewObs(self, artistName, song_reshape, index_name):
+    def createNewObs(self, artistName, song_df, song_reshape, index_name):
         """
         Append a new row with userId 0 that is interested in some specific artists
         :param artistName: a list of artist names
@@ -123,6 +121,29 @@ class collaborativeFiltering():
         interest = []
         for i in song_reshape.columns:
             if i in song_df[song_df.artist_name.isin(artistName)]['song_id'].unique():
+                interest.append(10)
+            else:
+                interest.append(0)
+
+        print(pd.Series(interest).value_counts())
+
+        newobs = pd.DataFrame([interest],
+                              columns=song_reshape.columns)
+        newobs.index = [index_name]
+
+        new_song_reshape = pd.concat([song_reshape, newobs])
+        new_ratings = new_song_reshape.as_matrix()
+        return (new_song_reshape, new_ratings)
+
+    def createNewObsSong(self, indexList, song_df, song_reshape, index_name):
+        """
+        Append a new row with userId 0 that is interested in some specific artists
+        :param artistName: a list of artist names
+        :return: dataframe, matrix
+        """
+        interest = []
+        for i in song_reshape.columns:
+            if i in song_df[song_df.index.isin(indexList)]['song_id'].unique():
                 interest.append(10)
             else:
                 interest.append(0)
@@ -152,12 +173,15 @@ if __name__=='__main__':
     cf = collaborativeFiltering()
     song_df = cf.readSongData(1000)
     song_reshape, ratings = cf.utilityMatrix(song_df)
-    song_reshape, ratings = cf.createNewObs(args.inputartist,
+    # song_reshape, ratings = cf.createNewObs(['Daft Punk', 'John Mayer', 'Hot Chip', 'Coldplay'],
+    #                                         song_reshape, 'Johnny')
+    song_reshape, ratings = cf.createNewObsSong([0,1,2,3,4],
                                             song_reshape, 'Johnny')
+
     user_prediction = cf.predict_fast_simple(ratings, kind='user')
     user_overall_recommend = cf.get_overall_recommend(ratings, song_reshape, user_prediction, top_n=10)
     user_recommend_johnny = cf.get_user_recommend('Johnny', user_overall_recommend, song_df)
-    user_recommend_johnny.to_csv(args.outputfile, sep=',', index=False)
+    user_recommend_johnny.to_csv('test.csv', sep=',', index=False)
 
 
 
