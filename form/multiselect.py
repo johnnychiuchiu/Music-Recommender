@@ -1,12 +1,15 @@
 from wtforms import widgets
 from wtforms import Form, SelectMultipleField, SubmitField
-from database.db_conn import dbConn
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
+import sqlite3
+import os
 
 # connect to db to get unique song, singer
-conn = dbConn('../develop/data/song.sqlite')
+
+path = os.getcwd()+'/data/song.sqlite'
+conn = sqlite3.connect(path)
 cursor = conn.execute('SELECT DISTINCT title, artist_name FROM Song limit 100;')
 data = [(i, song[0]+'----- '+song[1]) for i, song in enumerate(cursor.fetchall())]
 

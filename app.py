@@ -1,10 +1,11 @@
 from flask import render_template, redirect, request
 # from flask import flash, render_template, request, redirect
-import sqlite3
-from database.schema import Song
+
 from web import app
-from database.db_conn import dbConn
-from multiselect import ExampleForm, backForm
+from form.multiselect import ExampleForm, backForm
+import os
+import sqlite3
+
 
 # Create view into index page that uses data queried from Track database
 # and inserts it into the msiapp/templates/index.html template
@@ -16,7 +17,8 @@ def index():
     A page shows all the data as output
     """
     # return render_template('index.html', songs=Song.query.first())
-    conn = dbConn('../develop/data/song.sqlite')
+    path = os.getcwd() + '/data/song.sqlite'
+    conn = sqlite3.connect(path)
     cursor = conn.execute('SELECT distinct(title) FROM Song limit 100;')
     return render_template('index.html', songs=cursor.fetchall())
 
