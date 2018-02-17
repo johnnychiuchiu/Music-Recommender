@@ -2,14 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
     <title>Music Recommender</title>
 </head>
 <body>
     <div><a href="/current">Menu</a></div>
 
-    <h1>Language Selected</h1>
+    <h1>
+         <a>Your Recommended Song List</a>
+    </h1>
 
-    <div>{{ artist }}</div>
+   {{artists | safe}}
 
 </body>
 </html>
