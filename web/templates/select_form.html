@@ -6,9 +6,11 @@
 </head>
 <body>
 
-    <form action="" method="post">
-        <p>{{ form.example }}</p>
-        <p>{{ form.submit() }}</p>
+    <h1>Select Your Favorite Songs:</h1>
+
+    <form method="POST" action="/current">
+        <p>{{ form.artist }}</p>
+        <button type="submit" class="btn">Submit</button>
     </form>
 
 </body>
