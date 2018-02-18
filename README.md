@@ -9,9 +9,6 @@
 Steps
 ------------
 
-**Environment**
-* Go to `Music-Recommender/` folder, run
-```
 # Set up Environment
 # Go to `Music-Recommender/` folder, run
 > source ./py/bin/activate
