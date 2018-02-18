@@ -46,9 +46,9 @@ def current():
         # user_recommend_johnny = cf.get_user_recommend('Johnny', user_overall_recommend, song_df)
 
         # run SVD model
-        svd = mySVD()
+        svd = mySVD(2000)
         newObs = svd.createNewObs(artist)
-        data = svd.readSurpriseFormat(newObs, 1000)
+        data = svd.readSurpriseFormat(newObs)
         user_recommend = svd.fitModel(data)
 
         return render_template('playlist.html', artists=user_recommend.to_html(), artist=artist)

@@ -5,12 +5,14 @@ from surprise import SVD
 from collections import defaultdict
 import os
 import sqlite3
+import random
 
 
 class mySVD():
-    def __init__(self):
+    def __init__(self, top):
         self.DEFAULT_COUNT = 50
-        self.song_df = self.readSongData(1000)
+        self.SEED = 12345
+        self.song_df = self.readSongData(top)
         pass
 
     def readSongData(self, top):
@@ -19,7 +21,7 @@ class mySVD():
 
         Parameters
         ----------
-        top: filter the top n rows from the input song dataframe
+        top: random sample n users from song_df
 
         Returns
         -------
@@ -33,8 +35,11 @@ class mySVD():
         conn = sqlite3.connect(path)
         song_df = pd.read_sql_query("SELECT * FROM Song;", conn)
 
-        # keep top_n rows of the data
-        song_df = song_df.head(top)
+        # random sample n users from song_df
+        user_list = list(song_df.user_id.unique())
+        random.seed(self.SEED)
+        random.shuffle(user_list)
+        song_df = song_df[song_df.user_id.isin(user_list[0:top])]
 
         return song_df
 
@@ -60,7 +65,7 @@ class mySVD():
 
         return newObs
 
-    def readSurpriseFormat(self, newObs, top):
+    def readSurpriseFormat(self, newObs):
         """
         combine newObs dataframe with song dataframe and transform it into Surprise data format
 
@@ -105,7 +110,7 @@ class mySVD():
 
         # fit model
         trainset = data.build_full_trainset()
-        algo_svd = SVD(n_factors=50, lr_all=0.005, reg_all=0.04, random_state=12345)
+        algo_svd = SVD(n_factors=50, lr_all=0.002, reg_all=0.04, random_state=12345) # parameters tuned using 2000 user_id
         algo_svd.fit(trainset)
 
         # predict all the cells without values
@@ -171,9 +176,9 @@ class mySVD():
         return top_n
 
 if __name__=='__main__':
-    svd = mySVD()
+    svd = mySVD(top=100)
     newObs = svd.createNewObs(['SOAKIMP12A8C130995','SOBBMDR12A8C13253B','SOBXHDL12A81C204C0','SOBYHAJ12A6701BF1D','SODACBL12A8C13C273'])
-    data = svd.readSurpriseFormat(newObs, 1000)
+    data = svd.readSurpriseFormat(newObs)
     user_recommend = svd.fitModel(data)
 
 
