@@ -30,47 +30,50 @@ Steps
 > python app.py
 ```
 
+![page1](./pic/page1)
+
+
+![page2](./pic/page2)
+
 
 Documentation
 ------------
-* `latentFactorModel.ipynb`: Jupyter Notebook that contains a walkthrough of the overall process. [[jupyter notebook](https://github.com/johnnychiuchiu/Music-Recommender/blob/sprint_1/develop/notebooks/latentFactorModel.ipynb)]
+* `modelSelectionAndTuning.ipynb`: Jupyter Notebook that contains a walkthrough of the overall model building, model selection and parameter tuning. [[jupyter notebook](https://github.com/johnnychiuchiu/Music-Recommender/blob/refactor/directory/src/notebooks/modelSelectionAndTuning.ipynb)]
+
+* `latentFactorModel.ipynb`: An old version of the overall model building process [[jupyter notebook](https://github.com/johnnychiuchiu/Music-Recommender/blob/sprint_1/develop/notebooks/latentFactorModel.ipynb)]
 
 
 Project Organization
 ------------
 
     ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
     ├── README.md          <- The top-level README for developers using this project.
-    ├── data               <- Data files
-    │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
-    │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
-    │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    │
     ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
     │                         generated with `pip freeze > requirements.txt`
+    ├── py                 <- virtualenv files
+    │
+    ├── pic                <- some picture for demo purpose
+    │
+    ├── web                <- HTML and CSS files
+    │    
+    ├── form               <- user form selection files
+    │   
+    ├── data               <- Data files
     │
     ├── src                <- Source code for use in this project.
     │   ├── __init__.py    <- Makes src a Python module
     │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
+    │   ├── database       <- Scripts to download and generate data
     │   │
     │   ├── models         <- Scripts to train models and then use trained models to make
     │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
+    │   │   ├── svd.py
+    │   │   └── ubcf.py
     │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
-
+    │   └── notebooks      <- Jupyter notebooks. Used to reate exploratory, results oriented visualizations, 
+    │                         and parameter tuning
+    │
+    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
 
 
 
