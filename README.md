@@ -12,23 +12,24 @@ Steps
 **Environment**
 * Go to `Music-Recommender/` folder, run
 ```
+# Set up Environment
+# Go to `Music-Recommender/` folder, run
 > source ./py/bin/activate
 > pip install -r requirement.txt
-```
 
-**Get Data**
-
-* Go to `src/database` folder, run the following command. The data will be populated under `Music-Recommender/data` folder 
-```
+# Get Data. After the following command, the data will be populated under `Music-Recommender/data` folder 
+> cd ./src/database
 > python create_db.py
 > python insert_data.py
-```
 
-**Run App**
-* Go to `Music-Recommender/` folder, run
-```
+# Run App
+> cd ../..
 > python app.py
 ```
+
+
+Application Screenshot
+------------
 
 ![](https://github.com/johnnychiuchiu/Music-Recommender/blob/refactor/directory/pic/page1.png)
 
