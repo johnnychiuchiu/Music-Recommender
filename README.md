@@ -30,10 +30,10 @@ Steps
 > python app.py
 ```
 
-![page1](./pic/page1)
+![](https://github.com/johnnychiuchiu/Music-Recommender/blob/refactor/directory/pic/page1.png)
 
 
-![page2](./pic/page2)
+![](https://github.com/johnnychiuchiu/Music-Recommender/blob/refactor/directory/pic/page2.png)
 
 
 Documentation
@@ -47,32 +47,32 @@ Project Organization
 ------------
 
     ├── LICENSE
+    │
     ├── README.md          <- The top-level README for developers using this project.
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    ├── py                 <- virtualenv files
-    │
-    ├── pic                <- some picture for demo purpose
-    │
-    ├── web                <- HTML and CSS files
     │    
-    ├── form               <- user form selection files
+    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g. generated with `pip freeze > requirements.txt`               
+    │
+    ├── py                 <- virtualenv files
+    │
+    ├── pic                <- some picture for demo purpose
+    │
+    ├── web                <- HTML and CSS files
+    │    
+    ├── form               <- user form selection files
     │   
-    ├── data               <- Data files
+    ├── data               <- Data files
     │
     ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
+    │   ├── __init__.py    <- Makes src a Python module
     │   │
-    │   ├── database       <- Scripts to download and generate data
+    │   ├── database       <- Scripts to download and generate data
     │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── svd.py
-    │   │   └── ubcf.py
+    │   ├── models         <- Scripts to train models and then use trained models to make predictions
+    │   │   │                 
+    │   │   ├── svd.py
+    │   │   └── ubcf.py
     │   │
-    │   └── notebooks      <- Jupyter notebooks. Used to reate exploratory, results oriented visualizations, 
-    │                         and parameter tuning
-    │
+    │   └── notebooks      <- Jupyter notebooks. Used to reate exploratory, results oriented visualizations,  and parameter tuning                     
     ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
 
 
