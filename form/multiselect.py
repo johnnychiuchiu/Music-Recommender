@@ -9,8 +9,8 @@ import os
 
 path = os.getcwd()+'/data/song.sqlite'
 conn = sqlite3.connect(path)
-cursor = conn.execute('SELECT DISTINCT title, artist_name FROM Song limit 100;')
-data = [(str(i), song[0]+'----- '+song[1]) for i, song in enumerate(cursor.fetchall())]
+cursor = conn.execute('SELECT song_id, title, artist_name FROM Song limit 100;')
+data = [(song[0], song[1]+'----- '+song[2]) for i, song in enumerate(cursor.fetchall())]
 
 # cursor = conn.execute('SELECT DISTINCT artist_name FROM Song limit 100;')
 # data = [(str(i), artist[0]) for i, artist in enumerate(cursor.fetchall())]

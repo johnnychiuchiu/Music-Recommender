@@ -5,6 +5,7 @@ from flask import request, render_template
 from form.multiselect import ArtistForm
 from web import app
 from src.models.ubcf import collaborativeFiltering
+from src.models.svd import mySVD
 
 # Create view into index page that uses data queried from Track database
 # and inserts it into the msiapp/templates/index.html template
@@ -29,21 +30,28 @@ def current():
     if request.method == 'POST' and form.validate():
         print("POST request and form is valid")
         artist = form.artist.data
+        print(artist)
         print("languages in wsgi.py: %s" % request.form['artist'])
 
-        # run model
-        cf = collaborativeFiltering()
-        song_df = cf.readSongData(1000)
-        song_reshape, ratings = cf.utilityMatrix(song_df)
-        # song_reshape, ratings = cf.createNewObs(['Daft Punk', 'John Mayer', 'Hot Chip', 'Coldplay'],
-        #                                         song_reshape, 'Johnny')
-        song_reshape, ratings = cf.createNewObsSong(artist, song_df, song_reshape, 'Johnny')
+        # # run model
+        # cf = collaborativeFiltering()
+        # song_df = cf.readSongData(1000)
+        # song_reshape, ratings = cf.utilityMatrix(song_df)
+        # # song_reshape, ratings = cf.createNewObs(['Daft Punk', 'John Mayer', 'Hot Chip', 'Coldplay'],
+        # #                                         song_reshape, 'Johnny')
+        # song_reshape, ratings = cf.createNewObsSong(artist, song_df, song_reshape, 'Johnny')
+        #
+        # user_prediction = cf.predict_fast_simple(ratings, kind='user')
+        # user_overall_recommend = cf.get_overall_recommend(ratings, song_reshape, user_prediction, top_n=10)
+        # user_recommend_johnny = cf.get_user_recommend('Johnny', user_overall_recommend, song_df)
 
-        user_prediction = cf.predict_fast_simple(ratings, kind='user')
-        user_overall_recommend = cf.get_overall_recommend(ratings, song_reshape, user_prediction, top_n=10)
-        user_recommend_johnny = cf.get_user_recommend('Johnny', user_overall_recommend, song_df)
+        # run SVD model
+        svd = mySVD()
+        newObs = svd.createNewObs(artist)
+        data = svd.readSurpriseFormat(newObs, 1000)
+        user_recommend = svd.fitModel(data)
 
-        return render_template('playlist.html', artists=user_recommend_johnny.to_html())
+        return render_template('playlist.html', artists=user_recommend.to_html(), artist=artist)
     else:
         return render_template('select_form.html', form=form)
 
