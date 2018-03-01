@@ -4,9 +4,16 @@ def dbConn(path):
     """
     conn to sqlite database
 
+
+    Parameters
+    ----------
+    path : chr
+        path to the sqlite database
+
     Returns
     -------
-    sqlite database connection object
+    sqlite object
+        sqlite database connection object
     """
     song_db = '../../data/song.sqlite'
     conn = sqlite3.connect(path)

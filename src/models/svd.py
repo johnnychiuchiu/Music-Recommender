@@ -9,6 +9,9 @@ import random
 
 
 class mySVD():
+    """
+    Build a recommender system using Singular Value Decomposition Method
+    """
     def __init__(self, top):
         self.DEFAULT_COUNT = 50
         self.SEED = 12345
@@ -21,12 +24,13 @@ class mySVD():
 
         Parameters
         ----------
-        top: random sample n users from song_df
+        top : int
+            random sample n users from song_df
 
-        Returns
+        Return
         -------
-        a pandas dataframe with columns 'user_id', 'song_id', 'listen_count', 'title', 'release', 'artist_name',
-       'year', 'song'
+        data.frame
+            a pandas dataframe with columns 'user_id', 'song_id', 'listen_count', 'title', 'release', 'artist_name', 'year', 'song'
 
         """
 
@@ -49,11 +53,13 @@ class mySVD():
 
         Parameters
         ----------
-        songidList: the user selected song_ids with format like `SOAKIMP12A8C130995`
+        songidList : list
+            the user selected song_ids with format like `SOAKIMP12A8C130995`
 
         Returns
         -------
-        a pandas dataframe with columns 'user_id', 'song_id', 'listen_count'
+        data.frame
+            a pandas dataframe with columns 'user_id', 'song_id', 'listen_count'
 
         """
 
@@ -71,12 +77,14 @@ class mySVD():
 
         Parameters
         ----------
-        newObs: the dataframe obtain from the function createNewObs
-        top: filter the top n rows from the input song dataframe, this parameter will be passing into the function readSongData
+        newObs : data.frame
+            the dataframe obtain from the function createNewObs
+        top : int
+            filter the top n rows from the input song dataframe, this parameter will be passing into the function readSongData
 
         Returns
         -------
-        a surprise.dataset
+        surprise.dataset
 
         """
 
@@ -100,11 +108,13 @@ class mySVD():
 
         Parameters
         ----------
-        data: a surprise.dataset object obtained from the function readSurpriseFormat
+        data : surprise.dataset
+            a surprise.dataset object obtained from the function readSurpriseFormat
 
         Returns
         -------
-        A recommended list of songs for the application user
+        data.frame
+            A recommended list of songs for the application user
 
         """
 
@@ -133,11 +143,13 @@ class mySVD():
 
         Parameters
         ----------
-        top_list: a list contains tuples of ('song_id', 'score'), sorted by score
+        top_list : list
+            a list contains tuples of ('song_id', 'score'), sorted by score
 
         Returns
         -------
-        A dataframe containing the songs in the top_list, sorted by score.
+        data.frame
+            A dataframe containing the songs in the top_list, sorted by score.
         """
 
         user_score = pd.DataFrame(top_list).rename(columns={0: 'song_id', 1: 'score'})
@@ -152,15 +164,15 @@ class mySVD():
 
         Parameters
         ----------
-        predictions(list of Prediction objects): The list of predictions, as
-                returned by the test method of an algorithm.
-        n(int): The number of recommendation to output for each user. Default
-                is 10.
+        predictions :
+            The list of predictions, as returned by the test method of an algorithm.
+        n : int
+            The number of recommendation to output for each user. Default is 10.
 
         Returns
         -------
-        A dict where keys are user (raw) ids and values are lists of tuples:
-            [(raw item id, rating estimation), ...] of size n.
+        dict
+            A dict where keys are user (raw) ids and values are lists of tuples: [(raw item id, rating estimation), ...] of size n.
         """
 
         # First map the predictions to each user.
