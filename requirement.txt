@@ -29,6 +29,7 @@ pathspec==0.5.5
 post==0.0.26
 public==0.0.65
 Pygments==2.2.0
+PyMySQL==0.8.0
 pyparsing==2.2.0
 python-dateutil==2.6.1
 pytz==2017.3
