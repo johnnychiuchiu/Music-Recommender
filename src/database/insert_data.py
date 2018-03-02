@@ -89,7 +89,7 @@ if __name__=='__main__':
     # song_df.to_sql(name='Song', con=conn, if_exists='replace', index=True)
 
     # insert the dataframe into RDS database
-    song_df.to_sql("songs", db.engine, if_exists='replace', index=False)
+    song_df.to_sql("Song", db.engine, if_exists='replace', index=False)
 
     print("Song Data Inserted")
 
