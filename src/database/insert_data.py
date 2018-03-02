@@ -5,6 +5,9 @@ from db_conn import dbConn
 
 
 class ReadData():
+    """
+    Acquire song data from the url provided by Turi and save it into local database.
+    """
     def __init__(self):
         pass
 
@@ -14,7 +17,8 @@ class ReadData():
 
         Returns
         -------
-        a song dataframe
+        data.frame
+            a dataframe contain the data needed for building the recommender system
         """
         if 'song.pkl' in os.listdir('../../data'):
             song_df = pd.read_pickle('../../data/song.pkl')
@@ -56,11 +60,13 @@ class ReadData():
 
         Parameters
         ----------
-        song_df: data frame containing song data
+        song_df : data.frame
+            data frame containing song data
 
         Returns
         -------
-        a dataframe without users who listen to less than 5 songs
+        data.frame
+            a dataframe without users who listen to less than 5 songs
 
         """
         freq_df = song_df.groupby(['user_id']).agg({'song_id': 'count'}).reset_index(level=['user_id'])

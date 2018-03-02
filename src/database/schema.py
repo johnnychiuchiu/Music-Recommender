@@ -17,7 +17,7 @@ db = SQLAlchemy(app)
 
 class Song(db.Model):
     """
-    create a table name Song with the follow schema
+    create a table name Song with the following schema
     """
     __tablename__ = 'Song'
 
