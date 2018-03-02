@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+# sys.path.append('../database')
+from config import Config
 
-# Set db path
-db_path = '../../data/song.sqlite'
+# # Set db path
+# db_path = '../../data/song.sqlite'
 
 ## local version
 # # initialized flask app
@@ -16,14 +18,18 @@ db_path = '../../data/song.sqlite'
 # db = SQLAlchemy(app)
 
 ## EB version
-# initialized flask app
-application = Flask(__name__)
-
+# # initialized flask app
 # application = Flask(__name__)
-application.config.from_object('config')
+#
+# # application = Flask(__name__)
+# application.config.from_object('config')
+#
+# db = SQLAlchemy(application)
 
+## Logan's version
+application = Flask(__name__)
+application.config.from_object(Config)
 db = SQLAlchemy(application)
-
 
 class Song(db.Model):
     """
