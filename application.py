@@ -3,13 +3,13 @@ import sqlite3
 
 from flask import request, render_template
 from form.multiselect import ArtistForm
-from web import app
+from web import application
 from src.models.ubcf import collaborativeFiltering
 from src.models.svd import mySVD
 
 # Create view into index page that uses data queried from Track database
 # and inserts it into the msiapp/templates/index.html template
-@app.route('/')
+@application.route('/')
 def index():
     """
     Returns
@@ -23,7 +23,7 @@ def index():
     return render_template('index.html', songs=cursor.fetchall())
 
 
-@app.route('/current', methods=['GET', 'POST'])
+@application.route('/current', methods=['GET', 'POST'])
 def current():
     form = ArtistForm(request.form)
 
@@ -56,7 +56,7 @@ def current():
         return render_template('select_form.html', form=form)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    application.run(debug=True)
 
 
 # from flask import render_template, redirect, request, url_for, session, jsonify

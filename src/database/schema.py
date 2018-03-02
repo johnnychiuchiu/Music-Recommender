@@ -17,12 +17,12 @@ db_path = '../../data/song.sqlite'
 
 ## EB version
 # initialized flask app
-app = Flask(__name__)
+application = Flask(__name__)
 
 # application = Flask(__name__)
-app.config.from_object('config')
+application.config.from_object('config')
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(application)
 
 
 class Song(db.Model):
