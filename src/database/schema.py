@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-# sys.path.append('../database')
-from config import Config
+from src.database.config import Config
 
 # # Set db path
 # db_path = '../../data/song.sqlite'

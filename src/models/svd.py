@@ -6,6 +6,8 @@ from collections import defaultdict
 import os
 import sqlite3
 import random
+# sys.path.append('../database')
+from src.database.schema import db, application
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -44,19 +46,18 @@ class mySVD():
         # print(path)
         # song_df = pd.read_sql_query("SELECT * FROM Song;", conn)
 
-        # # Read data from RDS
+        # Read data from RDS
         # app = Flask(__name__)
         # app.config.from_object('config')
         # db = SQLAlchemy(app)
-        # song_df = pd.read_sql("SELECT * FROM songs;", db.engine)
+        # db.init_app(application)
+        # song_df = pd.read_sql("SELECT * FROM Song;", db.engine)
 
         # Try pymysql to read data from RDS
+        conn = pymysql.connect(os.environ.get('HOST'), user=os.environ.get('USER'), port=int(os.environ.get('PORT')),
+                               passwd=os.environ.get('PASSWORD'), db=os.environ.get('DBNAME'))
 
-
-        conn = pymysql.connect(Config.host, user=Config.user, port=Config.port,
-                               passwd=Config.password, db=Config.dbname)
-
-        song_df = pd.read_sql('SELECT * FROM songs;', con=conn)
+        song_df = pd.read_sql('SELECT * FROM Song;', con=conn)
 
         # random sample n users from song_df
         user_list = list(song_df.user_id.unique())
