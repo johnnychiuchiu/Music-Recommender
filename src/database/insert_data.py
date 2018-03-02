@@ -2,6 +2,9 @@ import pandas as pd
 import os
 from schema import Song
 from db_conn import dbConn
+from schema import db
+# from schema.db_models import *
+
 
 
 class ReadData():
@@ -80,10 +83,13 @@ if __name__=='__main__':
     song_df = ReadData().readSongData()
 
     # connect to sqlite database
-    conn = dbConn('../../data/song.sqlite')
+    # conn = dbConn('../../data/song.sqlite')
 
-    # insert the dataframe into the database
-    song_df.to_sql(name='Song', con=conn, if_exists='replace', index=True)
+    # # insert the dataframe into local database
+    # song_df.to_sql(name='Song', con=conn, if_exists='replace', index=True)
+
+    # insert the dataframe into RDS database
+    song_df.to_sql("songs", db.engine, if_exists='replace', index=False)
 
     print("Song Data Inserted")
 

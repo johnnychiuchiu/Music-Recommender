@@ -7,6 +7,11 @@ import os
 import sqlite3
 import random
 
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+import pymysql
+from config import Config
 
 class mySVD():
     """
@@ -34,10 +39,24 @@ class mySVD():
 
         """
 
-        path = os.getcwd() + '/data/song.sqlite' #/data/song.sqlite /../..
-        print(path)
-        conn = sqlite3.connect(path)
-        song_df = pd.read_sql_query("SELECT * FROM Song;", conn)
+        # # Read from local sqlite database
+        # path = os.getcwd() + '/data/song.sqlite' #/data/song.sqlite /../..
+        # print(path)
+        # song_df = pd.read_sql_query("SELECT * FROM Song;", conn)
+
+        # # Read data from RDS
+        # app = Flask(__name__)
+        # app.config.from_object('config')
+        # db = SQLAlchemy(app)
+        # song_df = pd.read_sql("SELECT * FROM songs;", db.engine)
+
+        # Try pymysql to read data from RDS
+
+
+        conn = pymysql.connect(Config.host, user=Config.user, port=Config.port,
+                               passwd=Config.password, db=Config.dbname)
+
+        song_df = pd.read_sql('SELECT * FROM songs;', con=conn)
 
         # random sample n users from song_df
         user_list = list(song_df.user_id.unique())
