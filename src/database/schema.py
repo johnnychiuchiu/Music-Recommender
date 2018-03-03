@@ -1,19 +1,34 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from src.database.config import Config
 
-# Set db path
-db_path = '../../data/song.sqlite'
+# # Set db path
+# db_path = '../../data/song.sqlite'
 
-# initialized flask app
-app = Flask(__name__)
+## local version
+# # initialized flask app
+# app = Flask(__name__)
+#
+# # SQLAlchemy configuration
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+#
+# # Initialize the database
+# db = SQLAlchemy(app)
 
-# SQLAlchemy configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+## EB version
+# # initialized flask app
+# application = Flask(__name__)
+#
+# # application = Flask(__name__)
+# application.config.from_object('config')
+#
+# db = SQLAlchemy(application)
 
-# Initialize the database
-db = SQLAlchemy(app)
-
+## Logan's version
+application = Flask(__name__)
+application.config.from_object(Config)
+db = SQLAlchemy(application)
 
 class Song(db.Model):
     """
