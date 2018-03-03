@@ -53,9 +53,13 @@ class mySVD():
         # db.init_app(application)
         # song_df = pd.read_sql("SELECT * FROM Song;", db.engine)
 
-        # Try pymysql to read data from RDS
-        conn = pymysql.connect(os.environ.get('HOST'), user=os.environ.get('USER'), port=int(os.environ.get('PORT')),
-                               passwd=os.environ.get('PASSWORD'), db=os.environ.get('DBNAME'))
+        # # Try pymysql to read data from RDS
+        # conn = pymysql.connect(os.environ.get('HOST'), user=os.environ.get('USER'), port=int(os.environ.get('PORT')),
+        #                        passwd=os.environ.get('PASSWORD'), db=os.environ.get('DBNAME'))
+
+        # try tutorial version
+        conn = pymysql.connect(os.environ['HOST'], user=os.environ['USER'], port=int(os.environ['PORT']),
+                               passwd=os.environ['PASSWORD'], db=os.environ['DBNAME'])
 
         song_df = pd.read_sql('SELECT * FROM Song;', con=conn)
 

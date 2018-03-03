@@ -20,8 +20,13 @@ import pandas as pd
 # from src.database.schema import db
 # song_df = pd.read_sql("SELECT * FROM Song;", db.engine)
 
-conn = pymysql.connect(os.environ.get('HOST'), user=os.environ.get('USER'), port=int(os.environ.get('PORT')),
-                       passwd=os.environ.get('PASSWORD'), db=os.environ.get('DBNAME'))
+# # current version
+# conn = pymysql.connect(os.environ.get('HOST'), user=os.environ.get('USER'), port=int(os.environ.get('PORT')),
+#                        passwd=os.environ.get('PASSWORD'), db=os.environ.get('DBNAME'))
+
+# try tutorial version
+conn = pymysql.connect(os.environ['HOST'], user=os.environ['USER'], port=int(os.environ['PORT']),
+                       passwd=os.environ['PASSWORD'], db=os.environ['DBNAME'])
 
 song_df = pd.read_sql('SELECT DISTINCT song_id, title, artist_name FROM Song;', con=conn)
 data = [(song[0], song[1]+'----- '+song[2]) for index, song in song_df.iterrows()]
