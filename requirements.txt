@@ -22,7 +22,7 @@ Jinja2==2.10
 jmespath==0.9.3
 joblib==0.11
 MarkupSafe==1.0
-numpy==1.11.2
+numpy==1.14.0
 packaging==16.8
 pandas==0.22.0
 pathspec==0.5.5
@@ -36,7 +36,6 @@ pytz==2017.3
 PyYAML==3.12
 query-string==0.0.28
 requests==2.9.1
-scikit-surprise==1.0.5
 semantic-version==2.5.0
 six==1.11.0
 snowballstemmer==1.2.1
