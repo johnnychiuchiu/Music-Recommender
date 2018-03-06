@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from src.database.config import Config
+import os
 
 # # Set db path
 # db_path = '../../data/song.sqlite'
@@ -24,6 +25,10 @@ from src.database.config import Config
 # application.config.from_object('config')
 #
 # db = SQLAlchemy(application)
+class Config(object):
+   SECRET_KEY = os.environ.get('SECRET_KEY') or 'secret-key'
+   SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+   SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 ## Logan's version
 application = Flask(__name__)
