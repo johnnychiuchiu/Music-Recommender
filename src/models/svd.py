@@ -13,7 +13,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 import pymysql
-from src.models.config import Config
+# from src.models.config import Config
 
 class mySVD():
     """
