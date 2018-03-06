@@ -9,22 +9,22 @@ from src.models.svd import mySVD
 
 # Create view into index page that uses data queried from Track database
 # and inserts it into the msiapp/templates/index.html template
-@application.route('/')
+# @application.route('/')
+# def index():
+#     """
+#     Returns
+#     -------
+#     A page shows all the data as output
+#     """
+#     # return render_template('index.html', songs=Song.query.first())
+#     path = os.getcwd() + '/data/song.sqlite'
+#     conn = sqlite3.connect(path)
+#     cursor = conn.execute('SELECT distinct(title) FROM Song limit 100;')
+#     return render_template('index.html', songs=cursor.fetchall())
+
+
+@application.route('/', methods=['GET', 'POST'])
 def index():
-    """
-    Returns
-    -------
-    A page shows all the data as output
-    """
-    # return render_template('index.html', songs=Song.query.first())
-    path = os.getcwd() + '/data/song.sqlite'
-    conn = sqlite3.connect(path)
-    cursor = conn.execute('SELECT distinct(title) FROM Song limit 100;')
-    return render_template('index.html', songs=cursor.fetchall())
-
-
-@application.route('/current', methods=['GET', 'POST'])
-def current():
     form = ArtistForm(request.form)
 
     if request.method == 'POST' and form.validate():
