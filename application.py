@@ -56,7 +56,7 @@ def index():
         return render_template('select_form.html', form=form)
 
 if __name__ == '__main__':
-    application.run(debug=True)
+    application.run(host='0.0.0.0')
 
 
 # from flask import render_template, redirect, request, url_for, session, jsonify
