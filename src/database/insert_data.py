@@ -95,14 +95,14 @@ if __name__=='__main__':
     # random sample n users
     song_df = ReadData().random_select_user(song_df, 500)
 
-    # connect to sqlite database
-    conn = dbConn('../../data/song2.sqlite')
+    # # connect to sqlite database
+    # conn = dbConn('../../data/song2.sqlite')
+    #
+    # # insert the dataframe into local database
+    # song_df.to_sql(name='Song', con=conn, if_exists='replace', index=True)
 
-    # insert the dataframe into local database
-    song_df.to_sql(name='Song', con=conn, if_exists='replace', index=True)
-
-    # # insert the dataframe into RDS database
-    # song_df.to_sql("Song", db.engine, if_exists='replace', index=False)
+    # insert the dataframe into RDS database
+    song_df.to_sql("Song", db.engine, if_exists='replace', index=False)
 
     print("Song Data Inserted")
 

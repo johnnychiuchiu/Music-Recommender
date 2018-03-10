@@ -42,11 +42,11 @@ class mySVD():
 
         """
 
-        # Read from local sqlite database
-        path = os.getcwd() + '/data/song2.sqlite' #/data/song.sqlite /../..
-        print(path)
-        conn = sqlite3.connect(path)
-        song_df = pd.read_sql_query("SELECT * FROM Song;", conn)
+        # # Read from local sqlite database
+        # path = os.getcwd() + '/data/song2.sqlite' #/data/song.sqlite /../..
+        # print(path)
+        # conn = sqlite3.connect(path)
+        # song_df = pd.read_sql_query("SELECT * FROM Song;", conn)
 
         # Read data from RDS
         # app = Flask(__name__)
@@ -63,14 +63,14 @@ class mySVD():
         # conn = pymysql.connect(os.environ['HOST'], user=os.environ['USER'], port=int(os.environ['PORT']),
         #                        passwd=os.environ['PASSWORD'], db=os.environ['DBNAME'])
 
-        # # try just using real host and everything
-        # conn = pymysql.connect("aag31r5zpl942v.c7rrmd1b0hyo.us-west-2.rds.amazonaws.com",
-        #                        user="ebusermarch02",
-        #                        port=3306,
-        #                        passwd="12345678",
-        #                        db="ebdb")
+        # try just using real host and everything
+        conn = pymysql.connect("dbmarch9.c7rrmd1b0hyo.us-west-2.rds.amazonaws.com",
+                               user="usermarch9",
+                               port=3306,
+                               passwd="12345678",
+                               db="dbmarch9")
 
-        # song_df = pd.read_sql('SELECT * FROM Song;', con=conn)
+        song_df = pd.read_sql('SELECT * FROM Song;', con=conn)
 
         # # random sample n users from song_df
         # user_list = list(song_df.user_id.unique())

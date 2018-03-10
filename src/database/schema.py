@@ -3,19 +3,19 @@ from flask_sqlalchemy import SQLAlchemy
 # from src.database.config import Config
 import os
 
-# Set db path
-db_path = '../../data/song2.sqlite'
-
-# local version
-# initialized flask app
-app = Flask(__name__)
-
-# SQLAlchemy configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-
-# Initialize the database
-db = SQLAlchemy(app)
+# # Set db path
+# db_path = '../../data/song2.sqlite'
+#
+# # local version
+# # initialized flask app
+# app = Flask(__name__)
+#
+# # SQLAlchemy configuration
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+#
+# # Initialize the database
+# db = SQLAlchemy(app)
 
 ## EB version
 # # initialized flask app
@@ -26,16 +26,16 @@ db = SQLAlchemy(app)
 #
 # db = SQLAlchemy(application)
 
-# # Final Version
-# class Config(object):
-#    SECRET_KEY = os.environ.get('SECRET_KEY') or 'secret-key'
-#    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
-#    SQLALCHEMY_TRACK_MODIFICATIONS = False
-#
-# ## Logan's version
-# application = Flask(__name__)
-# application.config.from_object(Config)
-# db = SQLAlchemy(application)
+# Final Version
+class Config(object):
+   SECRET_KEY = os.environ.get('SECRET_KEY') or 'secret-key'
+   SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+   SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+## Logan's version
+application = Flask(__name__)
+application.config.from_object(Config)
+db = SQLAlchemy(application)
 
 class Song(db.Model):
     """
