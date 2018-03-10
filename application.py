@@ -45,11 +45,29 @@ def index():
         # user_overall_recommend = cf.get_overall_recommend(ratings, song_reshape, user_prediction, top_n=10)
         # user_recommend_johnny = cf.get_user_recommend('Johnny', user_overall_recommend, song_df)
 
-        # run SVD model
-        svd = mySVD(2000)
+        # # run SVD model
+        # svd = mySVD(20)
+        # newObs = svd.createNewObs(artist)
+        # data = svd.readSurpriseFormat(newObs)
+        # user_recommend = svd.fitModel(data)
+
+        # # run SVD model version2
+        # create svd object
+        svd = mySVD()
+
+        # create testdata and transform into the required format from the recommender package
         newObs = svd.createNewObs(artist)
-        data = svd.readSurpriseFormat(newObs)
-        user_recommend = svd.fitModel(data)
+        testset = svd.testGenerator(newObs)
+
+        # get training data and transform into the required format from the recommender package
+        song_df = svd.readSongData()
+        trainset = svd.trainGenerator(song_df, newObs)
+
+        # fit model
+        algo_svd = svd.fitModel(trainset)
+
+        # make final recommendation
+        user_recommend = svd.predictTopSong(algo_svd, testset, artist)
 
         return render_template('playlist.html', artists=user_recommend.to_html(), artist=artist)
     else:

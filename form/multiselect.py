@@ -9,9 +9,13 @@ import pandas as pd
 
 # connect to db to get unique song, singer
 
-# path = os.getcwd()+'/data/song.sqlite'
-# conn = sqlite3.connect(path)
-# cursor = conn.execute('SELECT DISTINCT song_id, title, artist_name FROM Song;')
+path = os.getcwd()+'/data/song2.sqlite' #/..
+conn = sqlite3.connect(path)
+cursor = conn.execute('SELECT DISTINCT song_id, title, artist_name FROM Song;')
+song_df=pd.DataFrame(cursor.fetchall())
+song_df.columns=['song_id', 'title', 'artist_name']
+song_df = song_df.sort_values('artist_name', ascending=False)
+data = [(song[0], song[1]+'----- '+song[2]) for index, song in song_df.iterrows()]
 # data = [(song[0], song[1]+'----- '+song[2]) for i, song in enumerate(cursor.fetchall())]
 
 # import sys
@@ -28,14 +32,15 @@ import pandas as pd
 # conn = pymysql.connect(os.environ['HOST'], user=os.environ['USER'], port=int(os.environ['PORT']),
 #                        passwd=os.environ['PASSWORD'], db=os.environ['DBNAME'])
 
-conn = pymysql.connect("aag31r5zpl942v.c7rrmd1b0hyo.us-west-2.rds.amazonaws.com",
-                               user="ebusermarch02",
-                               port=3306,
-                               passwd="12345678",
-                               db="ebdb")
+# # Final Version
+# conn = pymysql.connect("aag31r5zpl942v.c7rrmd1b0hyo.us-west-2.rds.amazonaws.com",
+#                                user="ebusermarch02",
+#                                port=3306,
+#                                passwd="12345678",
+#                                db="ebdb")
 
-song_df = pd.read_sql('SELECT DISTINCT song_id, title, artist_name FROM Song;', con=conn)
-data = [(song[0], song[1]+'----- '+song[2]) for index, song in song_df.iterrows()]
+# song_df = pd.read_sql('SELECT DISTINCT song_id, title, artist_name FROM Song;', con=conn)
+# data = [(song[0], song[1]+'----- '+song[2]) for index, song in song_df.iterrows()]
 # cursor = conn.execute('SELECT DISTINCT artist_name FROM Song limit 100;')
 # data = [(str(i), artist[0]) for i, artist in enumerate(cursor.fetchall())]
 

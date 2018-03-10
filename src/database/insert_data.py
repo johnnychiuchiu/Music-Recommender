@@ -4,7 +4,7 @@ from schema import Song
 from db_conn import dbConn
 from schema import db
 # from schema.db_models import *
-
+import random
 
 
 class ReadData():
@@ -12,7 +12,7 @@ class ReadData():
     Acquire song data from the url provided by Turi and save it into local database.
     """
     def __init__(self):
-        pass
+        self.SEED = 12345
 
     def readSongData(self):
         """
@@ -78,18 +78,31 @@ class ReadData():
 
         return(new_song_df)
 
+    def random_select_user(self, song_df, top):
+
+        # random sample n users from song_df
+        user_list = list(song_df.user_id.unique())
+        random.seed(self.SEED)
+        random.shuffle(user_list)
+        song_df = song_df[song_df.user_id.isin(user_list[0:top])]
+
+        return song_df
+
 if __name__=='__main__':
     # read song data as dataframe
     song_df = ReadData().readSongData()
 
+    # random sample n users
+    song_df = ReadData().random_select_user(song_df, 500)
+
     # connect to sqlite database
-    # conn = dbConn('../../data/song.sqlite')
+    conn = dbConn('../../data/song2.sqlite')
 
-    # # insert the dataframe into local database
-    # song_df.to_sql(name='Song', con=conn, if_exists='replace', index=True)
+    # insert the dataframe into local database
+    song_df.to_sql(name='Song', con=conn, if_exists='replace', index=True)
 
-    # insert the dataframe into RDS database
-    song_df.to_sql("Song", db.engine, if_exists='replace', index=False)
+    # # insert the dataframe into RDS database
+    # song_df.to_sql("Song", db.engine, if_exists='replace', index=False)
 
     print("Song Data Inserted")
 
