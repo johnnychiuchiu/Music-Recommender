@@ -1,9 +1,6 @@
 import pandas as pd
 import os
-from schema import Song
-from db_conn import dbConn
 from schema import db
-# from schema.db_models import *
 import random
 
 
@@ -105,11 +102,4 @@ if __name__=='__main__':
     song_df.to_sql("Song", db.engine, if_exists='replace', index=False)
 
     print("Song Data Inserted")
-
-    # Song.query.first()
-
-
-# pd.read_sql_query("select * from " + name + ';', conn)
-# pd.read_sql_query("select * from Song limit 5;", conn)
-
 

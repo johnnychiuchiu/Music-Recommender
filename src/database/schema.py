@@ -1,30 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-# from src.database.config import Config
 import os
-
-# # Set db path
-# db_path = '../../data/song2.sqlite'
-#
-# # local version
-# # initialized flask app
-# app = Flask(__name__)
-#
-# # SQLAlchemy configuration
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-#
-# # Initialize the database
-# db = SQLAlchemy(app)
-
-## EB version
-# # initialized flask app
-# application = Flask(__name__)
-#
-# # application = Flask(__name__)
-# application.config.from_object('config')
-#
-# db = SQLAlchemy(application)
 
 # Final Version
 class Config(object):
