@@ -1,14 +1,13 @@
 Database
 =============================
 
+Database related functions and classes
 
-
-.. automodule:: db_conn
+.. automodule:: schema
    :members:
 
 .. automodule:: insert_data
    :members:
 
-.. automodule:: schema
-   :members:
+
 

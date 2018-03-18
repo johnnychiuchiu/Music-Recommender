@@ -4,19 +4,18 @@ import os
 
 # Final Version
 class Config(object):
-   SECRET_KEY = os.environ.get('SECRET_KEY') or 'secret-key'
-   SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
-   SQLALCHEMY_TRACK_MODIFICATIONS = False
+    """using the global variable saving in command line"""
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'secret-key'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-## Logan's version
+## final version
 application = Flask(__name__)
 application.config.from_object(Config)
 db = SQLAlchemy(application)
 
 class Song(db.Model):
-    """
-    create a table name Song with the following schema
-    """
+    """create a table name Song with the following schema"""
     __tablename__ = 'Song'
 
     index = db.Column(db.Integer, primary_key=True, autoincrement=True)

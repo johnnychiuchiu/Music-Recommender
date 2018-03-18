@@ -16,6 +16,9 @@ data = [(song[0], song[1]+'----- '+song[2]) for index, song in song_df.iterrows(
 
 
 class ArtistForm(Form):
+    """
+    Create a multiple select field for user to select the song they like
+    """
     artist = SelectMultipleField(
         u'Pick Things!',
         choices=data,
