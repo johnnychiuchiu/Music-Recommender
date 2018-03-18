@@ -1,23 +1,15 @@
 import pandas as pd
 from surprise import Dataset
 from surprise import Reader
-from surprise import SVD, KNNWithMeans
+from surprise import SVD
 from collections import defaultdict
-import os
-import sqlite3
-import random
-# sys.path.append('../database')
-# from src.database.schema import db, application
-
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-
 import pymysql
-# from src.models.config import Config
+
 
 class mySVD():
     """
     Build a recommender system using Singular Value Decomposition Method
+    Implemented using Surprise Package
     """
     def __init__(self):
         self.DEFAULT_COUNT = 50
@@ -30,38 +22,14 @@ class mySVD():
         """
         Read song data from database
 
-        Parameters
-        ----------
-        top : int
-            random sample n users from song_df
+        Args:
+            top (int): random sample n users from song_df
 
-        Return
-        -------
-        data.frame
-            a pandas dataframe with columns 'user_id', 'song_id', 'listen_count', 'title', 'release', 'artist_name', 'year', 'song'
+        Returns:
+            pd.DataFrame: a pandas dataframe with columns 'user_id', 'song_id', 'listen_count', 'title', 'release',
+                        'artist_name', 'year', 'song'
 
         """
-
-        # # Read from local sqlite database
-        # path = os.getcwd() + '/data/song2.sqlite' #/data/song.sqlite /../..
-        # print(path)
-        # conn = sqlite3.connect(path)
-        # song_df = pd.read_sql_query("SELECT * FROM Song;", conn)
-
-        # Read data from RDS
-        # app = Flask(__name__)
-        # app.config.from_object('config')
-        # db = SQLAlchemy(app)
-        # db.init_app(application)
-        # song_df = pd.read_sql("SELECT * FROM Song;", db.engine)
-
-        # # Try pymysql to read data from RDS
-        # conn = pymysql.connect(os.environ.get('HOST'), user=os.environ.get('USER'), port=int(os.environ.get('PORT')),
-        #                        passwd=os.environ.get('PASSWORD'), db=os.environ.get('DBNAME'))
-
-        # # try tutorial version
-        # conn = pymysql.connect(os.environ['HOST'], user=os.environ['USER'], port=int(os.environ['PORT']),
-        #                        passwd=os.environ['PASSWORD'], db=os.environ['DBNAME'])
 
         # try just using real host and everything
         conn = pymysql.connect("dbmarch9.c7rrmd1b0hyo.us-west-2.rds.amazonaws.com",
@@ -72,43 +40,51 @@ class mySVD():
 
         song_df = pd.read_sql('SELECT * FROM Song;', con=conn)
 
-        # # random sample n users from song_df
-        # user_list = list(song_df.user_id.unique())
-        # random.seed(self.SEED)
-        # random.shuffle(user_list)
-        # song_df = song_df[song_df.user_id.isin(user_list[0:top])]
-
         return song_df
 
     def trainGenerator(self, song_df, newObs):
+        """
+        transform the song dataframe into the required format for the Surprise package
 
+        Args:
+            song_df (pd.DataFrame): dataframe obtained from readSongData method
+            newObs (pd.DataFrame):
 
+        Returns:
+            surprise.trainset.Trainset: training data in the Surprise package format
+        """
         train = song_df[['user_id', 'song_id', 'listen_count']]
 
         # A reader is still needed but only the rating_scale param is requiered.
-        # reader = Reader(line_format='user_id song_id listen_count', rating_scale=(1, 100))
         reader = Reader(line_format='user item rating', rating_scale=(1, 100))
         trainset_load = Dataset.load_from_df(pd.concat([train,newObs]), reader)
         trainset = trainset_load.build_full_trainset()
         return trainset
 
     def testGenerator(self, df):
+        """
+        transform testing dataframe into the required format for the Surprise package
+
+        Args:
+            df (pd.DataFrame): testing data in the dataframe format
+
+        Returns:
+            list:
+                testing data in the required format for the Surprise package
+                the required format is list of tuples with user, song, and count
+        """
 
         return [(uid, iid, r) for (uid, iid, r) in zip(df['user_id'], df['song_id'], df['listen_count'])]
 
     def createNewObs(self, targetSongidList):
         """
-        Append a new row with userId Johnny that is interested in some selected songs
+        Append a new row with userId Johnny that is interested in a selected list of songs
 
-        Parameters
-        ----------
-        songidList : list
-            the user selected song_ids with format like `SOAKIMP12A8C130995`
+        Args:
+            targetSongidList (list): the user selected song_ids with format like `SOAKIMP12A8C130995`
 
-        Returns
-        -------
-        data.frame
-            a pandas dataframe with columns 'user_id', 'song_id', 'listen_count'
+        Returns:
+        pd.DataFrame: a pandas dataframe with columns 'user_id', 'song_id', 'listen_count'
 
         """
 
@@ -120,83 +96,45 @@ class mySVD():
         column_name = 'listen_count'
         newObs.loc[mask, column_name] = self.DEFAULT_COUNT
 
-        # ratings_dict = {'user_id': ['johnny']*len(songidList),
-        #                 'song_id': songidList,
-        #                 'listen_count': [self.DEFAULT_COUNT]*len(songidList)}
-        # newObs = pd.DataFrame(ratings_dict)
-        # newObs = newObs[['user_id', 'song_id', 'listen_count']]
-
         return newObs
-
-    # def readSurpriseFormat(self, newObs):
-    #     """
-    #     combine newObs dataframe with song dataframe and transform it into Surprise data format
-    #
-    #     Parameters
-    #     ----------
-    #     newObs : data.frame
-    #         the dataframe obtain from the function createNewObs
-    #     top : int
-    #         filter the top n rows from the input song dataframe, this parameter will be passing into the function readSongData
-    #
-    #     Returns
-    #     -------
-    #     surprise.dataset
-    #
-    #     """
-    #
-    #     # A reader is still needed but only the rating_scale param is requiered.
-    #     reader = Reader(rating_scale=(1, 100))
-    #
-    #     # get train data
-    #     train = self.song_df[['user_id', 'song_id', 'listen_count']]
-    #
-    #     # combine together
-    #     full = pd.concat([train, newObs]).reset_index(drop=True)
-    #
-    #     # The columns must correspond to user id, item id and ratings (in that order).
-    #     data = Dataset.load_from_df(full, reader)
-    #
-    #     return data
 
     def fitModel(self, trainset):
         """
         train a recommender system using SVD with pre-defined parameters
 
-        Parameters
-        ----------
-        data : surprise.dataset
-            a surprise.dataset object obtained from the function readSurpriseFormat
+        Args:
+            data (surprise.trainset.Trainset):
+                a surprise.trainset object obtained from the method trainGenerator
 
         Returns
         -------
-        data.frame
-            A recommended list of songs for the application user
+        surprise.prediction_algorithms.matrix_factorization.SVD: an SVD object from the Surprise package
 
         """
 
-        # fit model
-        algo_svd = SVD(n_factors=50, lr_all=0.002, reg_all=0.04, random_state=12345) # parameters tuned using 2000 user_id
+        # fit model using parameters tuned using 2000 user_id
+        algo_svd = SVD(n_factors=50, lr_all=0.002, reg_all=0.04, random_state=12345)
         algo_svd.fit(trainset)
 
         return algo_svd
 
-        # # predict all the cells without values
-        # testset = trainset.build_anti_testset()
-        # predictions_svd = algo_svd.test(testset)
-        #
-        # # get the top n recommendations for the user of the app. I name it Johnny.
-        # # a list contains tuples of ('song_id', 'score'), sorted by score
-        # top_n_svd = self.get_top_n(predictions_svd, n=10)
-        # top_list = top_n_svd['johnny']
-        #
-        # # get the recommended playlist
-        # user_recommend = self.getSongData(top_list)
-        #
-        # return user_recommend
-
     def predictTopSong(self, algo_svd, testset, targetSongidList):
+        """
+        get the top 10 song prediction using the input recommender system object for the user in the testset and
+        the song in the targetSongidList
 
+        Args:
+            algo_svd (surprise.prediction_algorithms.matrix_factorization.SVD):
+                an SVD object from the Surprise package
+                this can be obtained from the method fitModel
+            testset (list):
+                testing data in the required format for the Surprise package
+                this can be obtained from the method testGenerator
+            targetSongidList (list): the user selected song_ids with format like `SOAKIMP12A8C130995`
+
+        Returns:
+
+        """
 
         # predict all the cells without values
         predictions_svd = algo_svd.test(testset)
@@ -215,15 +153,11 @@ class mySVD():
         """
         Match the top n song_id back to song_df to get the complete song information
 
-        Parameters
-        ----------
-        top_list : list
-            a list contains tuples of ('song_id', 'score'), sorted by score
+        Args:
+            top_list (list): a list contains tuples of ('song_id', 'score'), sorted by score
 
-        Returns
-        -------
-        data.frame
-            A dataframe containing the songs in the top_list, sorted by score.
+        Returns:
+        pd.DataFrame: A dataframe containing the songs in the top_list, sorted by score.
         """
 
         user_score = pd.DataFrame(top_list).rename(columns={0: 'song_id', 1: 'score'})
@@ -236,17 +170,15 @@ class mySVD():
         """
         Return the top-N recommendation for each user from a set of predictions.
 
-        Parameters
-        ----------
-        predictions :
-            The list of predictions, as returned by the test method of an algorithm.
-        n : int
-            The number of recommendation to output for each user. Default is 10.
+        Args:
+            predictions (list):
+                The list of predictions, as returned by the test method of an recommender system object from Surprise.
+            n (int): the number of recommendation to output for each user. Default is 10.
 
-        Returns
-        -------
-        dict
-            A dict where keys are user (raw) ids and values are lists of tuples: [(raw item id, rating estimation), ...] of size n.
+        Returns:
+        dict:
+            A dict where keys are user (raw) ids and values are lists of tuples: [(raw item id, rating estimation), ...]
+            of size n.
         """
 
         # First map the predictions to each user.
@@ -281,10 +213,3 @@ if __name__=='__main__':
 
     # make final recommendation
     user_recommend = svd.predictTopSong(algo_svd, testset, targetSongidList)
-
-
-    # # data = svd.readSurpriseFormat(newObs)
-    # user_recommend = svd.fitModel(data)
-    #
-
-
