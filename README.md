@@ -74,6 +74,8 @@ Documentation
 
 * Step by step guide for database, environment and sphinx documentation set up. [[Github Wiki](https://github.com/johnnychiuchiu/Music-Recommender/wiki)]
 
+* You can find the slides for this project [here](https://github.com/johnnychiuchiu/Music-Recommender/blob/final-sprint/Music%20Recommender.pdf).
+
 Project Organization
 ------------
 
