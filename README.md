@@ -69,8 +69,9 @@ Documentation
 ------------
 * `modelSelectionAndTuning.ipynb`: Jupyter Notebook that contains a walkthrough of the overall model building, model selection and parameter tuning. [[jupyter notebook](https://github.com/johnnychiuchiu/Music-Recommender/blob/refactor/directory/src/notebooks/modelSelectionAndTuning.ipynb)]
 
-* `latentFactorModel.ipynb`: An old version of the overall model building process [[jupyter notebook](https://github.com/johnnychiuchiu/Music-Recommender/blob/sprint_1/develop/notebooks/latentFactorModel.ipynb)]
+* `latentFactorModel.ipynb`: An old version of the overall model building process. [[jupyter notebook](https://github.com/johnnychiuchiu/Music-Recommender/blob/sprint_1/develop/notebooks/latentFactorModel.ipynb)]
 
+* Step by step guide for database, environment and sphinx documentation set up. [[Github Wiki](https://github.com/johnnychiuchiu/Music-Recommender/wiki)]
 
 Project Organization
 ------------
