@@ -6,30 +6,61 @@
 * **SuccessCriteria**: Successfully deployed a web application that dynamically shows a recommended list of songs according to users’ input.
 
 
-Steps
+Suggested steps to deploy app
 ------------
-```
-# Set up Environment
-# Go to `Music-Recommender/` folder, run
-> source ./py/bin/activate
-> pip install -r requirement.txt
 
-# Get Data. After the following command, the data will be populated under `Music-Recommender/data` folder 
-> cd ./src/database
-> python create_db.py
-> python insert_data.py
+1. Clone repository.
+2. Use conda to create virtual environment
 
-# Run App
-> cd ../..
-> python app.py
-```
+   ```
+   > Music-Recommender$ conda create -n musicproject python=3
+   > Music-Recommender$ source activate musicproject
+   ```
+3. Install required packages
 
+   ```
+   > (musicproject) Music-Recommender$ pip install -r requirements.txt
+   ```
+  
+4. Set up music.env file with the following structure
+   
+   ```
+   export DATABASE_URL=XXX
+   export HOST=XXX    
+   export USER=XXX
+   export PASSWORD=XXX
+   export DBNAME=XXX    
+   export PORT=XXX
+   ```
+
+5. Set environment variables from file
+
+   ```
+   source music.env
+   ```
+
+6. Get data and save it into your mySQL database
+
+   ```
+   > (musicproject) Music-Recommender$ cd src/database   
+   > (musicproject) database$ python create_db.py  
+   > (musicproject) database$ python insert_data.py
+   ```
+
+
+   Note that the data is downloaded from the url provided by the company [Turi](https://turi.com/) using the following two hyperlinks. [Download User Listening History Data](https://static.turi.com/datasets/millionsong/10000.txt) and [Download Song Meta Data](https://static.turi.com/datasets/millionsong/song_data.csv).
+
+7. Launch the application
+
+   ```
+   > (musicproject) Music-Recommender$ 
+   ```
+
+
+   
 
 Application Screenshot
 ------------
-
-![](https://github.com/johnnychiuchiu/Music-Recommender/blob/refactor/directory/pic/page1.png)
-
 
 ![](https://github.com/johnnychiuchiu/Music-Recommender/blob/refactor/directory/pic/page2.png)
 
@@ -50,8 +81,6 @@ Project Organization
     │    
     ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g. generated with `pip freeze > requirements.txt`               
     │
-    ├── py                 <- virtualenv files
-    │
     ├── pic                <- some picture for demo purpose
     │
     ├── web                <- HTML and CSS files
@@ -66,12 +95,10 @@ Project Organization
     │   ├── database       <- Scripts to download and generate data
     │   │
     │   ├── models         <- Scripts to train models and then use trained models to make predictions
-    │   │   │                 
-    │   │   ├── svd.py
-    │   │   └── ubcf.py
     │   │
     │   └── notebooks      <- Jupyter notebooks. Used to reate exploratory, results oriented visualizations,  and parameter tuning                     
     ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
+
 
 
 
