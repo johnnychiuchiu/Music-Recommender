@@ -53,7 +53,7 @@ Suggested steps to deploy app
 7. Launch the application
 
    ```
-   > (musicproject) Music-Recommender$ 
+   > (musicproject) Music-Recommender$ python application.py
    ```
 
 
