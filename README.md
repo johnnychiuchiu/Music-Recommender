@@ -5,6 +5,7 @@
 * **Mission**: The goal of the project is to help people discover the music they may enjoy by providing them a list of recommended songs according to their favorite musicians and songs. This will be done using a collaborative filtering or a latent factor recommender model that is trained with the [Million Song Dataset](https://www.google.com/search?q=million+song+dataset&oq=million+so&aqs=chrome.0.69i59j69i60l2j69i61j69i57j0.5455j0j7&sourceid=chrome&ie=UTF-8).
 * **SuccessCriteria**: Successfully deployed a web application that dynamically shows a recommended list of songs according to users’ input.
 
+For this project, we used Pivotal Tracker, an Agile Project Management Software, to keep track of the overall progress. The pivotal tracker page for this project can be reached by clicking on [this link](https://www.pivotaltracker.com/n/projects/2142509).
 
 Suggested steps to deploy app
 ------------
