@@ -40,7 +40,13 @@ Suggested steps to deploy app
    source music.env
    ```
 
-6. Get data and save it into your mySQL database
+6. (OPTIONAL) If you want to run unit tests before running the code, run the following commands:
+
+   ```
+   > (musicproject) Music-Recommender$ py.test
+   ```
+
+7. Get data and save it into your mySQL database
 
    ```
    > (musicproject) Music-Recommender$ cd src/database   
@@ -51,7 +57,7 @@ Suggested steps to deploy app
 
    Note that the data is downloaded from the url provided by the company [Turi](https://turi.com/) using the following two hyperlinks. [Download User Listening History Data](https://static.turi.com/datasets/millionsong/10000.txt) and [Download Song Meta Data](https://static.turi.com/datasets/millionsong/song_data.csv).
 
-7. Launch the application
+8. Launch the application
 
    ```
    > (musicproject) Music-Recommender$ python application.py
