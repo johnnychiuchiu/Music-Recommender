@@ -1,9 +1,6 @@
 import pandas as pd
 import os
-from schema import Song
-from db_conn import dbConn
 from schema import db
-# from schema.db_models import *
 import random
 
 
@@ -18,10 +15,8 @@ class ReadData():
         """
         read song data from the url provided by Turi. If the data has already exist, then read data from pickle file.
 
-        Returns
-        -------
-        data.frame
-            a dataframe contain the data needed for building the recommender system
+        Returns:
+        pd.DataFrame: a dataframe contain the data needed for building the recommender system
         """
         if 'song.pkl' in os.listdir('../../data'):
             song_df = pd.read_pickle('../../data/song.pkl')
@@ -61,16 +56,11 @@ class ReadData():
         """
         delete user who listen to less than 5 songs
 
-        Parameters
-        ----------
-        song_df : data.frame
-            data frame containing song data
+        Args:
+            song_df (pd.DataFrame): a dataframe containing song data
 
-        Returns
-        -------
-        data.frame
-            a dataframe without users who listen to less than 5 songs
-
+        Returns:
+        pd.DataFrame: a dataframe without users who listen to less than 5 songs
         """
         freq_df = song_df.groupby(['user_id']).agg({'song_id': 'count'}).reset_index(level=['user_id'])
         below_userid = freq_df[freq_df.song_id <= 5]['user_id']
@@ -78,13 +68,23 @@ class ReadData():
 
         return(new_song_df)
 
-    def random_select_user(self, song_df, top):
+    def random_select_user(self, song_df, n):
+        """
+        randomly select n users from the song dataframe
+
+        Args:
+            song_df (pd.DataFrame): a dataframe containing song data
+            n (int): number of users
+
+        Returns:
+            pd.DataFrame: a dataframe containing song data from n number of users
+        """
 
         # random sample n users from song_df
         user_list = list(song_df.user_id.unique())
         random.seed(self.SEED)
         random.shuffle(user_list)
-        song_df = song_df[song_df.user_id.isin(user_list[0:top])]
+        song_df = song_df[song_df.user_id.isin(user_list[0:n])]
 
         return song_df
 
@@ -105,11 +105,4 @@ if __name__=='__main__':
     song_df.to_sql("Song", db.engine, if_exists='replace', index=False)
 
     print("Song Data Inserted")
-
-    # Song.query.first()
-
-
-# pd.read_sql_query("select * from " + name + ';', conn)
-# pd.read_sql_query("select * from Song limit 5;", conn)
-
 
