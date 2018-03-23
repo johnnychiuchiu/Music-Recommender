@@ -1,6 +1,8 @@
 # Music-Recommender
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/johnnychiuchiu/Machine-Learning/blob/master/LICENSE)
 
+The goal of the project is to build a [music recommender application](http://ec2-52-33-67-106.us-west-2.compute.amazonaws.com:5000/) from scratch.
+
 * **Vision**: Engage music fans by recommending select number of songs based on user’s song and genre preference.
 * **Mission**: The goal of the project is to help people discover the music they may enjoy by providing them a list of recommended songs according to their favorite musicians and songs. This will be done using a collaborative filtering or a latent factor recommender model that is trained with the [Million Song Dataset](https://www.google.com/search?q=million+song+dataset&oq=million+so&aqs=chrome.0.69i59j69i60l2j69i61j69i57j0.5455j0j7&sourceid=chrome&ie=UTF-8).
 * **SuccessCriteria**: Successfully deployed a web application that dynamically shows a recommended list of songs according to users’ input.
@@ -40,13 +42,7 @@ Suggested steps to deploy app
    source music.env
    ```
 
-6. (OPTIONAL) If you want to run unit tests before running the code, run the following commands:
-
-   ```
-   > (musicproject) Music-Recommender$ py.test
-   ```
-
-7. Get data and save it into your mySQL database
+6. Get data and save it into your mySQL database
 
    ```
    > (musicproject) Music-Recommender$ cd src/database   
@@ -56,6 +52,14 @@ Suggested steps to deploy app
 
 
    Note that the data is downloaded from the url provided by the company [Turi](https://turi.com/) using the following two hyperlinks. [Download User Listening History Data](https://static.turi.com/datasets/millionsong/10000.txt) and [Download Song Meta Data](https://static.turi.com/datasets/millionsong/song_data.csv).
+
+7. (OPTIONAL) If you want to run unit tests before launch the application, run the following commands:
+
+   ```
+   > (musicproject) Music-Recommender$ cd test/
+   > (musicproject) Music-Recommender$ pytest
+   > (musicproject) Music-Recommender$ cd ..   
+   ```
 
 8. Launch the application
 
