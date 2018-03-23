@@ -93,7 +93,7 @@ if __name__=='__main__':
     song_df = ReadData().readSongData()
 
     # random sample n users
-    song_df = ReadData().random_select_user(song_df, 500)
+    randomsong_df = ReadData().random_select_user(song_df, 10)
 
     # # connect to sqlite database
     # conn = dbConn('../../data/song2.sqlite')

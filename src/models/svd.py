@@ -205,8 +205,7 @@ if __name__=='__main__':
     testset = svd.testGenerator(newObs)
 
     # get training data and transform into the required format from the recommender package
-    song_df = svd.readSongData()
-    trainset = svd.trainGenerator(song_df, newObs)
+    trainset = svd.trainGenerator(svd.song_df, newObs)
 
     # fit model
     algo_svd = svd.fitModel(trainset)
