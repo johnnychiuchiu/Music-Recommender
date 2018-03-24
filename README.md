@@ -1,6 +1,14 @@
 # Music-Recommender
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/johnnychiuchiu/Machine-Learning/blob/master/LICENSE)
 
+* **Developer**: [Johnny Chiu](https://github.com/johnnychiuchiu)
+* **Product Owner**: [Spencer Moon](https://github.com/spencermoon)
+* **QA**: [Yuqing Liu](https://github.com/yuqingliu11)
+
+
+Project Charter
+------------
+
 The goal of the project is to build a [music recommender application](http://ec2-52-33-67-106.us-west-2.compute.amazonaws.com:5000/) from scratch.
 
 * **Vision**: Engage music fans by recommending select number of songs based on user’s song and genre preference.
