@@ -112,6 +112,10 @@ Project Organization
     │   │
     │   └── notebooks      <- Jupyter notebooks. Used to reate exploratory, results oriented visualizations,  and parameter tuning                     
     ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
+    │  
+    ├── test               <- Unit tests
+    │  
+    ├── log                <- Logging files
 
 
 
