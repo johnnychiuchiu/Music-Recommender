@@ -4,7 +4,8 @@ from surprise import Reader
 from surprise import SVD
 from collections import defaultdict
 import pymysql
-
+import yaml
+import os
 
 class mySVD():
     """
@@ -12,11 +13,26 @@ class mySVD():
     Implemented using Surprise Package
     """
     def __init__(self):
-        self.DEFAULT_COUNT = 50
-        self.SEED = 12345
+        model_meta = self.getParams()
+
+        self.DEFAULT_COUNT = model_meta['data_manipulate']['default_count']
         self.song_df = self.readSongData()
         self.songidList = list(self.song_df['song_id'].unique())
-        pass
+
+        self.N_FACTORS = model_meta['svd']['n_factors']
+        self.LR_ALL = model_meta['svd']['lr_all']
+        self.REG_ALL = model_meta['svd']['reg_all']
+        self.SEED = model_meta['svd']['seed']
+
+
+    def getParams(self):
+        """Get params for model building"""
+        print(os.getcwd())
+        with open('params.yaml', 'r') as f:
+            model_meta = yaml.load(f)
+
+        return model_meta
+
 
     def readSongData(self):
         """
@@ -113,7 +129,7 @@ class mySVD():
         """
 
         # fit model using parameters tuned using 2000 user_id
-        algo_svd = SVD(n_factors=50, lr_all=0.002, reg_all=0.04, random_state=12345)
+        algo_svd = SVD(n_factors=self.N_FACTORS, lr_all=self.LR_ALL, reg_all=self.REG_ALL, random_state=self.SEED)
         algo_svd.fit(trainset)
 
         return algo_svd
@@ -212,3 +228,4 @@ if __name__=='__main__':
 
     # make final recommendation
     user_recommend = svd.predictTopSong(algo_svd, testset, targetSongidList)
+    print(user_recommend)

@@ -1,0 +1,8 @@
+data_manipulate:
+  default_count: 50
+
+svd:
+  n_factors: 35
+  lr_all: 0.002
+  reg_all: 0.04
+  seed: 12345
