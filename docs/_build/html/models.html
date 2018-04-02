@@ -1,0 +1,261 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Recommender Models &#8212; Music Recommender  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Database" href="database.html" />
+    <link rel="prev" title="Welcome to Music Recommender’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="recommender-models">
+<h1>Recommender Models<a class="headerlink" href="#recommender-models" title="Permalink to this headline">¶</a></h1>
+<p>A recommender system using Singular Value Decomposition Method</p>
+<span class="target" id="module-svd"></span><dl class="class">
+<dt id="svd.mySVD">
+<em class="property">class </em><code class="descclassname">svd.</code><code class="descname">mySVD</code><a class="reference internal" href="_modules/svd.html#mySVD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#svd.mySVD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a recommender system using Singular Value Decomposition Method
+Implemented using Surprise Package</p>
+<dl class="method">
+<dt id="svd.mySVD.createNewObs">
+<code class="descname">createNewObs</code><span class="sig-paren">(</span><em>targetSongidList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/svd.html#mySVD.createNewObs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#svd.mySVD.createNewObs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append a new row with userId Johnny that is interested in a selected list of songs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>targetSongidList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) – the user selected song_ids with format like <cite>SOAKIMP12A8C130995</cite></td>
+</tr>
+</tbody>
+</table>
+<p>Returns:
+pd.DataFrame: a pandas dataframe with columns ‘user_id’, ‘song_id’, ‘listen_count’</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="svd.mySVD.fitModel">
+<code class="descname">fitModel</code><span class="sig-paren">(</span><em>trainset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/svd.html#mySVD.fitModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#svd.mySVD.fitModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>train a recommender system using SVD with pre-defined parameters</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>surprise.trainset.Trainset</em>) – a surprise.trainset object obtained from the method trainGenerator</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>surprise.prediction_algorithms.matrix_factorization.SVD</strong></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">an SVD object from the Surprise package</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="svd.mySVD.getSongData">
+<code class="descname">getSongData</code><span class="sig-paren">(</span><em>top_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/svd.html#mySVD.getSongData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#svd.mySVD.getSongData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match the top n song_id back to song_df to get the complete song information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>top_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) – a list contains tuples of (‘song_id’, ‘score’), sorted by score</td>
+</tr>
+</tbody>
+</table>
+<p>Returns:
+pd.DataFrame: A dataframe containing the songs in the top_list, sorted by score.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="svd.mySVD.get_top_n">
+<code class="descname">get_top_n</code><span class="sig-paren">(</span><em>predictions</em>, <em>targetSongidList</em>, <em>n=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/svd.html#mySVD.get_top_n"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#svd.mySVD.get_top_n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the top-N recommendation for each user from a set of predictions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>predictions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) – The list of predictions, as returned by the test method of an recommender system object from Surprise.</li>
+<li><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – the number of recommendation to output for each user. Default is 10.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns:
+dict:</p>
+<blockquote>
+<div>A dict where keys are user (raw) ids and values are lists of tuples: [(raw item id, rating estimation), …]
+of size n.</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="svd.mySVD.predictTopSong">
+<code class="descname">predictTopSong</code><span class="sig-paren">(</span><em>algo_svd</em>, <em>testset</em>, <em>targetSongidList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/svd.html#mySVD.predictTopSong"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#svd.mySVD.predictTopSong" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the top 10 song prediction using the input recommender system object for the user in the testset and
+the song in the targetSongidList</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>algo_svd</strong> (<em>surprise.prediction_algorithms.matrix_factorization.SVD</em>) – an SVD object from the Surprise package
+this can be obtained from the method fitModel</li>
+<li><strong>testset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) – testing data in the required format for the Surprise package
+this can be obtained from the method testGenerator</li>
+<li><strong>targetSongidList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) – the user selected song_ids with format like <cite>SOAKIMP12A8C130995</cite></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="svd.mySVD.readSongData">
+<code class="descname">readSongData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/svd.html#mySVD.readSongData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#svd.mySVD.readSongData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read song data from database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>top</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – random sample n users from song_df</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>a pandas dataframe with columns ‘user_id’, ‘song_id’, ‘listen_count’, ‘title’, ‘release’,</dt>
+<dd>’artist_name’, ‘year’, ‘song’</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">pd.DataFrame</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="svd.mySVD.testGenerator">
+<code class="descname">testGenerator</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/svd.html#mySVD.testGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#svd.mySVD.testGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>transform testing dataframe into the required format for the Surprise package</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>df</strong> (<em>pd.DataFrame</em>) – testing data in the dataframe format</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">testing data in the required format for the Surprise package
+the required format is list of tuples with user, song, and count</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="svd.mySVD.trainGenerator">
+<code class="descname">trainGenerator</code><span class="sig-paren">(</span><em>song_df</em>, <em>newObs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/svd.html#mySVD.trainGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#svd.mySVD.trainGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>transform the song dataframe into the required format for the Surprise package</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>song_df</strong> (<em>pd.DataFrame</em>) – dataframe obtained from readSongData method</li>
+<li><strong>newObs</strong> (<em>pd.DataFrame</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">training data in the Surprise package format</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">surprise.trainset.Trainset</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Music Recommender’s documentation!</a></li>
+      <li>Next: <a href="database.html" title="next chapter">Database</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Johnny Chiu.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/models.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

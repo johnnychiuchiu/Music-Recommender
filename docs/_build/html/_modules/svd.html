@@ -1,0 +1,300 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>svd &#8212; Music Recommender  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for svd</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">surprise</span> <span class="k">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span> <span class="nn">surprise</span> <span class="k">import</span> <span class="n">Reader</span>
+<span class="kn">from</span> <span class="nn">surprise</span> <span class="k">import</span> <span class="n">SVD</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">pymysql</span>
+
+
+<div class="viewcode-block" id="mySVD"><a class="viewcode-back" href="../models.html#svd.mySVD">[docs]</a><span class="k">class</span> <span class="nc">mySVD</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build a recommender system using Singular Value Decomposition Method</span>
+<span class="sd">    Implemented using Surprise Package</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_COUNT</span> <span class="o">=</span> <span class="mi">50</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SEED</span> <span class="o">=</span> <span class="mi">12345</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">song_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readSongData</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">songidList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">song_df</span><span class="p">[</span><span class="s1">&#39;song_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="mySVD.readSongData"><a class="viewcode-back" href="../models.html#svd.mySVD.readSongData">[docs]</a>    <span class="k">def</span> <span class="nf">readSongData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read song data from database</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            top (int): random sample n users from song_df</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: a pandas dataframe with columns &#39;user_id&#39;, &#39;song_id&#39;, &#39;listen_count&#39;, &#39;title&#39;, &#39;release&#39;,</span>
+<span class="sd">                        &#39;artist_name&#39;, &#39;year&#39;, &#39;song&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># try just using real host and everything</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;dbmarch9.c7rrmd1b0hyo.us-west-2.rds.amazonaws.com&quot;</span><span class="p">,</span>
+                               <span class="n">user</span><span class="o">=</span><span class="s2">&quot;usermarch9&quot;</span><span class="p">,</span>
+                               <span class="n">port</span><span class="o">=</span><span class="mi">3306</span><span class="p">,</span>
+                               <span class="n">passwd</span><span class="o">=</span><span class="s2">&quot;12345678&quot;</span><span class="p">,</span>
+                               <span class="n">db</span><span class="o">=</span><span class="s2">&quot;dbmarch9&quot;</span><span class="p">)</span>
+
+        <span class="n">song_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM Song;&#39;</span><span class="p">,</span> <span class="n">con</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">song_df</span></div>
+
+<div class="viewcode-block" id="mySVD.trainGenerator"><a class="viewcode-back" href="../models.html#svd.mySVD.trainGenerator">[docs]</a>    <span class="k">def</span> <span class="nf">trainGenerator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">song_df</span><span class="p">,</span> <span class="n">newObs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        transform the song dataframe into the required format for the Surprise package</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            song_df (pd.DataFrame): dataframe obtained from readSongData method</span>
+<span class="sd">            newObs (pd.DataFrame):</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            surprise.trainset.Trainset: training data in the Surprise package format</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">train</span> <span class="o">=</span> <span class="n">song_df</span><span class="p">[[</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;song_id&#39;</span><span class="p">,</span> <span class="s1">&#39;listen_count&#39;</span><span class="p">]]</span>
+
+        <span class="c1"># A reader is still needed but only the rating_scale param is requiered.</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">Reader</span><span class="p">(</span><span class="n">line_format</span><span class="o">=</span><span class="s1">&#39;user item rating&#39;</span><span class="p">,</span> <span class="n">rating_scale</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+        <span class="n">trainset_load</span> <span class="o">=</span> <span class="n">Dataset</span><span class="o">.</span><span class="n">load_from_df</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">train</span><span class="p">,</span><span class="n">newObs</span><span class="p">]),</span> <span class="n">reader</span><span class="p">)</span>
+        <span class="n">trainset</span> <span class="o">=</span> <span class="n">trainset_load</span><span class="o">.</span><span class="n">build_full_trainset</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">trainset</span></div>
+
+<div class="viewcode-block" id="mySVD.testGenerator"><a class="viewcode-back" href="../models.html#svd.mySVD.testGenerator">[docs]</a>    <span class="k">def</span> <span class="nf">testGenerator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        transform testing dataframe into the required format for the Surprise package</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame): testing data in the dataframe format</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list:</span>
+<span class="sd">                testing data in the required format for the Surprise package</span>
+<span class="sd">                the required format is list of tuples with user, song, and count</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[(</span><span class="n">uid</span><span class="p">,</span> <span class="n">iid</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">uid</span><span class="p">,</span> <span class="n">iid</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;song_id&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;listen_count&#39;</span><span class="p">])]</span></div>
+
+<div class="viewcode-block" id="mySVD.createNewObs"><a class="viewcode-back" href="../models.html#svd.mySVD.createNewObs">[docs]</a>    <span class="k">def</span> <span class="nf">createNewObs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">targetSongidList</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Append a new row with userId Johnny that is interested in a selected list of songs</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            targetSongidList (list): the user selected song_ids with format like `SOAKIMP12A8C130995`</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        pd.DataFrame: a pandas dataframe with columns &#39;user_id&#39;, &#39;song_id&#39;, &#39;listen_count&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">newObs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;user_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;johnny&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">songidList</span><span class="p">),</span>
+                                <span class="s1">&#39;song_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">songidList</span><span class="p">,</span>
+                                <span class="s1">&#39;listen_count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})[[</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;song_id&#39;</span><span class="p">,</span> <span class="s1">&#39;listen_count&#39;</span><span class="p">]]</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">newObs</span><span class="p">[</span><span class="s1">&#39;song_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">targetSongidList</span><span class="p">)</span>
+        <span class="n">column_name</span> <span class="o">=</span> <span class="s1">&#39;listen_count&#39;</span>
+        <span class="n">newObs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">column_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_COUNT</span>
+
+        <span class="k">return</span> <span class="n">newObs</span></div>
+
+<div class="viewcode-block" id="mySVD.fitModel"><a class="viewcode-back" href="../models.html#svd.mySVD.fitModel">[docs]</a>    <span class="k">def</span> <span class="nf">fitModel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        train a recommender system using SVD with pre-defined parameters</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (surprise.trainset.Trainset):</span>
+<span class="sd">                a surprise.trainset object obtained from the method trainGenerator</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        surprise.prediction_algorithms.matrix_factorization.SVD: an SVD object from the Surprise package</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># fit model using parameters tuned using 2000 user_id</span>
+        <span class="n">algo_svd</span> <span class="o">=</span> <span class="n">SVD</span><span class="p">(</span><span class="n">n_factors</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">lr_all</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span> <span class="n">reg_all</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+        <span class="n">algo_svd</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainset</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">algo_svd</span></div>
+
+<div class="viewcode-block" id="mySVD.predictTopSong"><a class="viewcode-back" href="../models.html#svd.mySVD.predictTopSong">[docs]</a>    <span class="k">def</span> <span class="nf">predictTopSong</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">algo_svd</span><span class="p">,</span> <span class="n">testset</span><span class="p">,</span> <span class="n">targetSongidList</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get the top 10 song prediction using the input recommender system object for the user in the testset and</span>
+<span class="sd">        the song in the targetSongidList</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            algo_svd (surprise.prediction_algorithms.matrix_factorization.SVD):</span>
+<span class="sd">                an SVD object from the Surprise package</span>
+<span class="sd">                this can be obtained from the method fitModel</span>
+<span class="sd">            testset (list):</span>
+<span class="sd">                testing data in the required format for the Surprise package</span>
+<span class="sd">                this can be obtained from the method testGenerator</span>
+<span class="sd">            targetSongidList (list): the user selected song_ids with format like `SOAKIMP12A8C130995`</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># predict all the cells without values</span>
+        <span class="n">predictions_svd</span> <span class="o">=</span> <span class="n">algo_svd</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">testset</span><span class="p">)</span>
+
+        <span class="c1"># get the top n recommendations for the user of the app. I name it Johnny.</span>
+        <span class="c1"># a list contains tuples of (&#39;song_id&#39;, &#39;score&#39;), sorted by score</span>
+        <span class="n">top_n_svd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_top_n</span><span class="p">(</span><span class="n">predictions_svd</span><span class="p">,</span> <span class="n">targetSongidList</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">top_list</span> <span class="o">=</span> <span class="n">top_n_svd</span><span class="p">[</span><span class="s1">&#39;johnny&#39;</span><span class="p">]</span>
+
+        <span class="c1"># get the recommended playlist</span>
+        <span class="n">user_recommend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSongData</span><span class="p">(</span><span class="n">top_list</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">user_recommend</span></div>
+
+<div class="viewcode-block" id="mySVD.getSongData"><a class="viewcode-back" href="../models.html#svd.mySVD.getSongData">[docs]</a>    <span class="k">def</span> <span class="nf">getSongData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Match the top n song_id back to song_df to get the complete song information</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            top_list (list): a list contains tuples of (&#39;song_id&#39;, &#39;score&#39;), sorted by score</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        pd.DataFrame: A dataframe containing the songs in the top_list, sorted by score.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">user_score</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">top_list</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;song_id&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;score&#39;</span><span class="p">})</span>
+        <span class="n">user_recommend</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">user_score</span><span class="p">,</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">song_df</span><span class="p">[[</span><span class="s1">&#39;song_id&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;release&#39;</span><span class="p">,</span> <span class="s1">&#39;artist_name&#39;</span><span class="p">,</span> <span class="s1">&#39;song&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(),</span>
+                                  <span class="n">on</span><span class="o">=</span><span class="s1">&#39;song_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">user_recommend</span></div>
+
+<div class="viewcode-block" id="mySVD.get_top_n"><a class="viewcode-back" href="../models.html#svd.mySVD.get_top_n">[docs]</a>    <span class="k">def</span> <span class="nf">get_top_n</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">targetSongidList</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the top-N recommendation for each user from a set of predictions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            predictions (list):</span>
+<span class="sd">                The list of predictions, as returned by the test method of an recommender system object from Surprise.</span>
+<span class="sd">            n (int): the number of recommendation to output for each user. Default is 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        dict:</span>
+<span class="sd">            A dict where keys are user (raw) ids and values are lists of tuples: [(raw item id, rating estimation), ...]</span>
+<span class="sd">            of size n.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># First map the predictions to each user.</span>
+        <span class="n">top_n</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">uid</span><span class="p">,</span> <span class="n">iid</span><span class="p">,</span> <span class="n">true_r</span><span class="p">,</span> <span class="n">est</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">predictions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">iid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">targetSongidList</span><span class="p">:</span>
+                <span class="n">top_n</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">iid</span><span class="p">,</span> <span class="n">est</span><span class="p">))</span>
+
+        <span class="c1"># Then sort the predictions for each user and retrieve the k highest ones.</span>
+        <span class="k">for</span> <span class="n">uid</span><span class="p">,</span> <span class="n">user_ratings</span> <span class="ow">in</span> <span class="n">top_n</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">user_ratings</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">top_n</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_ratings</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">top_n</span></div></div>
+
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">targetSongidList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SOAKIMP12A8C130995&#39;</span><span class="p">,</span><span class="s1">&#39;SOBBMDR12A8C13253B&#39;</span><span class="p">,</span><span class="s1">&#39;SOBXHDL12A81C204C0&#39;</span><span class="p">,</span><span class="s1">&#39;SOBYHAJ12A6701BF1D&#39;</span><span class="p">,</span><span class="s1">&#39;SODACBL12A8C13C273&#39;</span><span class="p">]</span>
+
+    <span class="c1"># create svd object</span>
+    <span class="n">svd</span> <span class="o">=</span> <span class="n">mySVD</span><span class="p">()</span>
+
+    <span class="c1"># create testdata and transform into the required format from the recommender package</span>
+    <span class="n">newObs</span> <span class="o">=</span> <span class="n">svd</span><span class="o">.</span><span class="n">createNewObs</span><span class="p">(</span><span class="n">targetSongidList</span><span class="p">)</span>
+    <span class="n">testset</span> <span class="o">=</span> <span class="n">svd</span><span class="o">.</span><span class="n">testGenerator</span><span class="p">(</span><span class="n">newObs</span><span class="p">)</span>
+
+    <span class="c1"># get training data and transform into the required format from the recommender package</span>
+    <span class="n">song_df</span> <span class="o">=</span> <span class="n">svd</span><span class="o">.</span><span class="n">readSongData</span><span class="p">()</span>
+    <span class="n">trainset</span> <span class="o">=</span> <span class="n">svd</span><span class="o">.</span><span class="n">trainGenerator</span><span class="p">(</span><span class="n">song_df</span><span class="p">,</span> <span class="n">newObs</span><span class="p">)</span>
+
+    <span class="c1"># fit model</span>
+    <span class="n">algo_svd</span> <span class="o">=</span> <span class="n">svd</span><span class="o">.</span><span class="n">fitModel</span><span class="p">(</span><span class="n">trainset</span><span class="p">)</span>
+
+    <span class="c1"># make final recommendation</span>
+    <span class="n">user_recommend</span> <span class="o">=</span> <span class="n">svd</span><span class="o">.</span><span class="n">predictTopSong</span><span class="p">(</span><span class="n">algo_svd</span><span class="p">,</span> <span class="n">testset</span><span class="p">,</span> <span class="n">targetSongidList</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Johnny Chiu.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,157 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Database &#8212; Music Recommender  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Recommender Models" href="models.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="database">
+<h1>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h1>
+<p>Database related functions and classes</p>
+<span class="target" id="module-schema"></span><dl class="class">
+<dt id="schema.Config">
+<em class="property">class </em><code class="descclassname">schema.</code><code class="descname">Config</code><a class="reference internal" href="_modules/schema.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schema.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>using the global variable saving in command line</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="schema.Song">
+<em class="property">class </em><code class="descclassname">schema.</code><code class="descname">Song</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/schema.html#Song"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schema.Song" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a table name Song with the following schema</p>
+</dd></dl>
+
+<span class="target" id="module-insert_data"></span><dl class="class">
+<dt id="insert_data.ReadData">
+<em class="property">class </em><code class="descclassname">insert_data.</code><code class="descname">ReadData</code><a class="reference internal" href="_modules/insert_data.html#ReadData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#insert_data.ReadData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acquire song data from the url provided by Turi and save it into local database.</p>
+<dl class="method">
+<dt id="insert_data.ReadData.drop_freq_low">
+<code class="descname">drop_freq_low</code><span class="sig-paren">(</span><em>song_df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/insert_data.html#ReadData.drop_freq_low"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#insert_data.ReadData.drop_freq_low" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete user who listen to less than 5 songs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>song_df</strong> (<em>pd.DataFrame</em>) – a dataframe containing song data</td>
+</tr>
+</tbody>
+</table>
+<p>Returns:
+pd.DataFrame: a dataframe without users who listen to less than 5 songs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="insert_data.ReadData.random_select_user">
+<code class="descname">random_select_user</code><span class="sig-paren">(</span><em>song_df</em>, <em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/insert_data.html#ReadData.random_select_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#insert_data.ReadData.random_select_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>randomly select n users from the song dataframe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>song_df</strong> (<em>pd.DataFrame</em>) – a dataframe containing song data</li>
+<li><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – number of users</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a dataframe containing song data from n number of users</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pd.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="insert_data.ReadData.readSongData">
+<code class="descname">readSongData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/insert_data.html#ReadData.readSongData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#insert_data.ReadData.readSongData" title="Permalink to this definition">¶</a></dt>
+<dd><p>read song data from the url provided by Turi. If the data has already exist, then read data from pickle file.</p>
+<p>Returns:
+pd.DataFrame: a dataframe contain the data needed for building the recommender system</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="models.html" title="previous chapter">Recommender Models</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Johnny Chiu.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/database.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
