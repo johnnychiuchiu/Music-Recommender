@@ -18,7 +18,7 @@ get==0.0.39
 idna==2.6
 imagesize==1.0.0
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.11.3
 jmespath==0.9.3
 joblib==0.11
 MarkupSafe==1.0
